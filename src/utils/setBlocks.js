@@ -1,7 +1,8 @@
 import blockFormat from "./blockFormat";
 import searchRedirectBlocks from "./searchRedirectBlocks";
 
-export default function setBlocks(blocks, res) {
+export default function setBlocks(res) {
+  const blocks = []
   function processBlocks(block, x, y) {
     if (res.data.results.length === blocks.length) {
       return;
@@ -13,18 +14,18 @@ export default function setBlocks(blocks, res) {
     const redirectBlocks = searchRedirectBlocks([], block, res.data.results);
     if (redirectBlocks.length > 0) {
       let nextY = y;
-      redirectBlocks.forEach((redirectedBlock, index) => {
+      redirectBlocks.forEach((redirectedBlock) => {
         if (!blocks.some((b) => b.id === `${redirectedBlock.id}`)) {
-          processBlocks(redirectedBlock, x + 550, nextY);
+          processBlocks(redirectedBlock, x + 900, nextY);
           const redirects = searchRedirectBlocks(
             [],
             redirectedBlock,
             res.data.results
           ).length;
           if (redirects) {
-            nextY += 400 * redirects;
+            nextY += 550 * redirects;
           } else {
-            nextY += 400;
+            nextY += 150;
           }
         }
       });
@@ -33,7 +34,7 @@ export default function setBlocks(blocks, res) {
 
   if (res.data.results.length) {
     const block = res.data.results[0];
-    processBlocks(block, 30, 10);
+    processBlocks(block, 0, 0);
   }
 
   return blocks;
